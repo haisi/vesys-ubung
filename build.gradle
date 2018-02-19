@@ -1,0 +1,69 @@
+apply plugin: 'java'
+
+repositories {
+    jcenter()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+compileJava.options.encoding = 'UTF-8'
+
+dependencies {
+    compile 'junit:junit:4.12'
+}
+
+tasks.withType(Javadoc) {
+	include "bank/Bank.java"
+	include "bank/Account.java"
+	include "bank/OverdrawException.java"
+	include "bank/InactiveException.java"
+	include "bank/BankDriver.java"
+	
+	
+	//https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
+    options {
+		setNoDeprecatedList(true)
+		setNoHelp(true)
+		setNoTree(true)
+		setNoIndex(true)
+		setAuthor(true)
+		setVersion(true)
+		setUse(true)
+        encoding    = "UTF-8"
+        bottom "<i>Copyright &#169; 2000-2018 D. Gruntz, FHNW. All Rights Reserved.</i>"
+        windowTitle "Distributed Systems Assignments"
+        setMemberLevel JavadocMemberLevel.PROTECTED
+		links += [
+			'https://docs.oracle.com/javase/8/docs/api/'
+		]
+    }
+}
+
+task zip(type: Zip) {
+    from (projectDir){
+	    include 'build.gradle'
+		include 'src/main/java/bank/Bank.java'
+		include 'src/main/java/bank/Account.java'
+		include 'src/main/java/bank/BankDriver.java'
+		include 'src/main/java/bank/BankDriver2.java'
+		include 'src/main/java/bank/Client.java'
+		include 'src/main/java/bank/InactiveException.java'
+		include 'src/main/java/bank/OverdrawException.java'
+		include 'src/main/java/bank/RunClient.java'
+		include 'src/main/java/bank/gui/*.java'
+		include 'src/main/java/bank/gui/tests/BankTest.java'
+		include 'src/main/java/bank/gui/tests/EfficiencyTest.java'
+		include 'src/main/java/bank/gui/tests/EfficiencyTestDS.java'
+		include 'src/main/java/bank/gui/tests/FunctionalityTest.java'
+		include 'src/main/java/bank/gui/tests/TransferTest.java'
+		include 'src/main/java/bank/local/Driver.java'
+	}
+	from (projectDir) {
+		include 'src/main/resources/Servers.stud' 
+		rename {'Servers.txt'}
+	}
+	from('build/docs/javadoc') {
+		include '**'
+		into 'docs'
+    }
+}
