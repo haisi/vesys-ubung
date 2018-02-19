@@ -15,10 +15,12 @@ import java.util.stream.Collectors;
 import bank.InactiveException;
 import bank.OverdrawException;
 
+/**
+ * A local implementation of the Bank.
+ * i.e. if there is no server
+ */
 public class Driver implements bank.BankDriver {
     private Bank bank = null;
-
-    private static int accountNumber = 0;
 
     @Override
     public void connect(String[] args) {
@@ -53,7 +55,7 @@ public class Driver implements bank.BankDriver {
 
         @Override
         public String createAccount(String owner) {
-            Account newAccount = new Account(owner, Integer.toString(++accountNumber));
+            Account newAccount = new Account(owner, Integer.toString(accounts.size()));
 
             accounts.put(newAccount.getNumber(), newAccount);
 
