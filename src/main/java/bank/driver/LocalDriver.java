@@ -18,7 +18,7 @@ import bank.OverdrawException;
  * A local implementation of the Bank.
  * i.e. if there is no server
  */
-public class LocalDriver implements bank.BankDriver {
+public class LocalDriver implements BankDriver {
     private Bank bank = null;
 
     @Override

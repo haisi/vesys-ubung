@@ -1,16 +1,18 @@
 /*
  * Copyright (c) 2000-2018 Fachhochschule Nordwestschweiz (FHNW)
- * All Rights Reserved. 
+ * All Rights Reserved.
  */
 
-package bank;
+package bank.driver;
+
+import bank.Bank;
 
 import java.io.IOException;
 
 /**
  * The BankDriver interface is used to access a particular bank. The client
  * program first calls connect over this interface and then requests the bank.
- * 
+ *
  * @see Bank
  * @author Dominik Gruntz
  * @version 3.0
@@ -22,7 +24,7 @@ public interface BankDriver {
 	 * Connects to an implementation of a bank. Parameters which designate e.g.
 	 * the name or number of the server and possibly other arguments may be
 	 * passed.
-	 * 
+	 *
 	 * @param args array of implementation specific arguments
 	 * @throws IOException if a remoting or communication problem occurs
 	 */
@@ -40,9 +42,9 @@ public interface BankDriver {
 	 * invoked, connect must be called. getBank must have singleton semantics,
 	 * i.e. it should return the same instance upon subsequent calls. After
 	 * disconnect has been called getBank returns null.
-	 * 
+	 *
 	 * @return the bank to which this driver instance has been connected.
-	 * 
+	 *
 	 * @see #connect
 	 * @see Bank
 	 */

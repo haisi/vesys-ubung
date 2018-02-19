@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2000-2018 Fachhochschule Nordwestschweiz (FHNW)
- * All Rights Reserved. 
+ * All Rights Reserved.
  */
 
 package bank.gui;
@@ -46,8 +46,8 @@ import javax.swing.SwingUtilities;
 
 import bank.Account;
 import bank.Bank;
-import bank.BankDriver;
-import bank.BankDriver2;
+import bank.driver.BankDriver;
+import bank.driver.BankDriver2;
 import bank.InactiveException;
 import bank.OverdrawException;
 import bank.gui.tests.BankTest;
@@ -75,12 +75,12 @@ public class BankGUI extends JFrame {
 	private JMenuItem item_gen    = new JMenuItem("Generate Accounts");
 	private JMenuItem item_exit   = new JMenuItem("Exit");
 	private JMenuItem item_about  = new JMenuItem("About");
-	
+
 	private List<BankTest> tests = new LinkedList<>();
 	private Map<BankTest, JMenuItem> testMenuItems = new HashMap<>();
-	
+
 	private boolean ignoreItemChanges = false;
-	
+
 	private BankTest loadTest(String name) {
 		try {
 			return (BankTest)Class.forName(name).newInstance();
@@ -92,12 +92,12 @@ public class BankGUI extends JFrame {
 			return null;
 		}
 	}
-	
+
 
 	public BankGUI(BankDriver server) {
 		this.driver = server;
 		this.bank   = server.getBank();
-		
+
 		if(server instanceof BankDriver2) {
 			final AtomicBoolean refreshRegistered = new AtomicBoolean(false);
 			try {
@@ -120,7 +120,7 @@ public class BankGUI extends JFrame {
 
 		setTitle("ClientBank Application");
 		setBackground(Color.lightGray);
-		
+
 		BankTest test;
 		test = loadTest("bank.gui.tests.EfficiencyTestDS");
 		if(test != null) { tests.add(test); }
@@ -138,7 +138,7 @@ public class BankGUI extends JFrame {
 		if(test != null) { tests.add(test); }
 		test = loadTest("bank.gui.tests.PerformanceTest");
 		if(test != null) { tests.add(test); }
-		
+
 		// define menus
 		JMenuBar menubar = new JMenuBar();
 		setJMenuBar(menubar);
@@ -153,7 +153,7 @@ public class BankGUI extends JFrame {
 
 		JMenu menu_test = new JMenu("Test");
 		menubar.add(menu_test);
-		
+
 		for (BankTest t : tests) {
 			JMenuItem m = new JMenuItem(t.getName());
 			testMenuItems.put(t, m);
@@ -433,7 +433,7 @@ public class BankGUI extends JFrame {
 							Account from = accounts.get(number);
 							Account to   = accounts.get(trans.getAccountNumber());
 							bank.transfer(from, to, amount);
-							
+
 							// after transfer adjust value of displayed account
 							fld_balance.setText(currencyFormat(from.getBalance()));
 
@@ -488,7 +488,7 @@ public class BankGUI extends JFrame {
 					if(item.equals(nr)) accountcombo.setSelectedItem(item);
 				}
 				ignoreItemChanges=false;
-				
+
 				// clean up local accounts map
 				for(String key : s){
 					if(!accounts.containsKey(key)){
@@ -505,7 +505,7 @@ public class BankGUI extends JFrame {
 				btn_withdraw.setEnabled(size > 0);
 				btn_transfer.setEnabled(size > 1);
 				item_close.setEnabled(size > 0);
-				
+
 				for (BankTest t : tests) {
 					JMenuItem m = testMenuItems.get(t);
 					m.setEnabled(t.isEnabled(size));

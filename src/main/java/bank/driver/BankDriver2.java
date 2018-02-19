@@ -1,16 +1,19 @@
 /*
  * Copyright (c) 2000-2018 Fachhochschule Nordwestschweiz (FHNW)
- * All Rights Reserved. 
+ * All Rights Reserved.
  */
 
-package bank;
+package bank.driver;
+
+import bank.Bank;
+import bank.driver.BankDriver;
 
 import java.io.IOException;
 
 /**
  * The BankDriver2 interface allows the client to register a listener which
  * informs the client about changes.
- * 
+ *
  * @see Bank
  * @author Dominik Gruntz
  * @version 3.0
@@ -23,17 +26,17 @@ public interface BankDriver2 extends BankDriver {
 	 * closed or if its balance is changed) then the dateChanged method is
 	 * invoked.
 	 * @param handler the update handler to be registered
-	 * 
+	 *
 	 * @throws IOException if a remoting or communication problem occurs
 	 */
 	void registerUpdateHandler(UpdateHandler handler) throws IOException;
-	
+
 	interface UpdateHandler {
 		/**
 		 * The accountChanged method is invoked whenever an account changes
 		 * on the server side, i.e. if an account is created, closed or if
 		 * its balance changes.
-		 * 
+		 *
 		 * @param id the number of the changed account. If the argument passed
 		 * 		     is null, then any account may have changed.
 		 * @throws IOException if a remoting or communication problem occurs
