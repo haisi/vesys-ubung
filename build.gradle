@@ -18,8 +18,8 @@ tasks.withType(Javadoc) {
 	include "bank/OverdrawException.java"
 	include "bank/InactiveException.java"
 	include "bank/BankDriver.java"
-	
-	
+
+
 	//https://docs.gradle.org/current/javadoc/org/gradle/external/javadoc/StandardJavadocDocletOptions.html
     options {
 		setNoDeprecatedList(true)
@@ -56,10 +56,10 @@ task zip(type: Zip) {
 		include 'src/main/java/bank/gui/tests/EfficiencyTestDS.java'
 		include 'src/main/java/bank/gui/tests/FunctionalityTest.java'
 		include 'src/main/java/bank/gui/tests/TransferTest.java'
-		include 'src/main/java/bank/local/Driver.java'
+		include 'src/main/java/bank/driver/LocalDriver.java'
 	}
 	from (projectDir) {
-		include 'src/main/resources/Servers.stud' 
+		include 'src/main/resources/Servers.stud'
 		rename {'Servers.txt'}
 	}
 	from('build/docs/javadoc') {

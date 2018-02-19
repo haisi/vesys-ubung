@@ -3,11 +3,10 @@
  * All Rights Reserved.
  */
 
-package bank.local;
+package bank.driver;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ import bank.OverdrawException;
  * A local implementation of the Bank.
  * i.e. if there is no server
  */
-public class Driver implements bank.BankDriver {
+public class LocalDriver implements bank.BankDriver {
     private Bank bank = null;
 
     @Override

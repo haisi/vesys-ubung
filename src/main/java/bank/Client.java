@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2000-2018 Fachhochschule Nordwestschweiz (FHNW)
- * All Rights Reserved. 
+ * All Rights Reserved.
  */
 
 package bank;
@@ -16,26 +16,26 @@ import bank.gui.BankGUI;
  * runtime parameter the name of the class which implements the
  * <code>BankDriver</code> interface has to be specified. This class is then
  * loaded and used to access the bank. This class needs a public constructor.
- * 
+ *
  * <pre>
  * Usage: java bank.Client &lt;classname&gt;
  * </pre>
- * 
+ *
  * E.g. start the application with one of the following commands. The additional
  * runtime arguments are passed to the connect method of the BankDriver
  * implementation.
- * 
+ *
  * <pre>
- * java bank.Client bank.local.Driver
+ * java bank.Client bank.driver.LocalDriver
  * java bank.Client bank.sockets.Driver localhost 1234
  * </pre>
- * 
+ *
  * @see BankDriver
  * @author Dominik Gruntz
  * @version 3.0
  */
 public final class Client {
-	
+
 	/** Utility class which is only used to start the application */
 	private Client() { }
 
