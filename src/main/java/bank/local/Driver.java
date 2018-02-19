@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2000-2018 Fachhochschule Nordwestschweiz (FHNW)
- * All Rights Reserved. 
+ * All Rights Reserved.
  */
 
 package bank.local;
@@ -10,111 +10,146 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import bank.InactiveException;
 import bank.OverdrawException;
 
 public class Driver implements bank.BankDriver {
-	private Bank bank = null;
+    private Bank bank = null;
 
-	@Override
-	public void connect(String[] args) {
-		bank = new Bank();
-		System.out.println("connected...");
-	}
+    private static int accountNumber = 0;
 
-	@Override
-	public void disconnect() {
-		bank = null;
-		System.out.println("disconnected...");
-	}
+    @Override
+    public void connect(String[] args) {
+        bank = new Bank();
+        System.out.println("connected...");
+    }
 
-	@Override
-	public Bank getBank() {
-		return bank;
-	}
+    @Override
+    public void disconnect() {
+        bank = null;
+        System.out.println("disconnected...");
+    }
 
-	static class Bank implements bank.Bank {
+    @Override
+    public Bank getBank() {
+        return bank;
+    }
 
-		private final Map<String, Account> accounts = new HashMap<>();
+    static class Bank implements bank.Bank {
 
-		@Override
-		public Set<String> getAccountNumbers() {
-			System.out.println("Bank.getAccountNumbers has to be implemented");
-			return new HashSet<String>(); // TODO has to be replaced
-		}
+        private final Map<String, Account> accounts = new HashMap<>();
 
-		@Override
-		public String createAccount(String owner) {
-			// TODO has to be implemented
-			System.out.println("Bank.createAccount has to be implemented");
-			return null;
-		}
+        @Override
+        public Set<String> getAccountNumbers() {
+            return accounts.entrySet()
+                           .stream()
+                           // Check if account is active
+                           .filter(entry -> entry.getValue().active)
+                           .map(Map.Entry::getKey)
+                           .collect(Collectors.toSet());
+        }
 
-		@Override
-		public boolean closeAccount(String number) {
-			// TODO has to be implemented
-			System.out.println("Bank.closeAccount has to be implemented");
-			return false;
-		}
+        @Override
+        public String createAccount(String owner) {
+            Account newAccount = new Account(owner, Integer.toString(++accountNumber));
 
-		@Override
-		public bank.Account getAccount(String number) {
-			return accounts.get(number);
-		}
+            accounts.put(newAccount.getNumber(), newAccount);
 
-		@Override
-		public void transfer(bank.Account from, bank.Account to, double amount)
-				throws IOException, InactiveException, OverdrawException {
-			// TODO has to be implemented
-			System.out.println("Bank.transfer has to be implemented");
-		}
+            return newAccount.number;
+        }
 
-	}
+        @Override
+        public boolean closeAccount(String number) {
+            Account account = accounts.get(number);
+            if (account == null) {
+                return false;
+            } else if (account.getBalance() != 0) {
+                return false;
+            }
 
-	static class Account implements bank.Account {
-		private String number;
-		private String owner;
-		private double balance;
-		private boolean active = true;
+            account.active = false;
+            return true;
+        }
 
-		Account(String owner) {
-			this.owner = owner;
-			// TODO account number has to be set here or has to be passed using the constructor
-		}
+        @Override
+        public bank.Account getAccount(String number) {
+            return accounts.get(number);
+        }
 
-		@Override
-		public double getBalance() {
-			return balance;
-		}
+        @Override
+        public void transfer(bank.Account from, bank.Account to, double amount)
+            throws IOException, InactiveException, OverdrawException {
+            if (amount < 0) {
+                throw new IllegalArgumentException("Withdrawing negative amounts is illegal");
+            } else if (!from.isActive()) {
+                throw new InactiveException("From account is in-active");
+            } else if (!to.isActive()) {
+                throw new InactiveException("To account is in-active");
+            }
 
-		@Override
-		public String getOwner() {
-			return owner;
-		}
+            from.withdraw(amount);
+            to.deposit(amount);
+        }
 
-		@Override
-		public String getNumber() {
-			return number;
-		}
+    }
 
-		@Override
-		public boolean isActive() {
-			return active;
-		}
+    static class Account implements bank.Account {
+        private String number;
+        private String owner;
+        private double balance;
+        private boolean active = true;
 
-		@Override
-		public void deposit(double amount) throws InactiveException {
-			// TODO has to be implemented
-			System.out.println("Account.deposit has to be implemented");
-		}
+        Account(String owner, String number) {
+            this.owner = owner;
+            this.number = number;
+        }
 
-		@Override
-		public void withdraw(double amount) throws InactiveException, OverdrawException {
-			// TODO has to be implemented
-			System.out.println("Account.withdraw has to be implemented");
-		}
+        @Override
+        public double getBalance() {
+            return balance;
+        }
 
-	}
+        @Override
+        public String getOwner() {
+            return owner;
+        }
+
+        @Override
+        public String getNumber() {
+            return number;
+        }
+
+        @Override
+        public boolean isActive() {
+            return active;
+        }
+
+        @Override
+        public void deposit(double amount) throws InactiveException {
+            if (!active) {
+                throw new InactiveException();
+            } else if (amount < 0) {
+                throw new IllegalArgumentException("Withdrawing negative amounts is illegal");
+            }
+
+            balance += amount;
+        }
+
+        @Override
+        public void withdraw(double amount) throws InactiveException, OverdrawException {
+            if (!active) {
+                throw new InactiveException();
+            } else if (amount < 0) {
+                throw new IllegalArgumentException("Withdrawing negative amounts is illegal");
+            } else if (balance - amount < 0) {
+                throw new OverdrawException();
+            }
+
+            balance -= amount;
+        }
+
+    }
 
 }
